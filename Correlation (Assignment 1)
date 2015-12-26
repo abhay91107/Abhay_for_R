@@ -1,0 +1,58 @@
+#Assinment 1 (Part 3): Pollutant Data (specdata)
+#Name: Abhay Kumar Jha
+#Email:abhay_91107@yahoo.com.au"
+
+#Checking the working directory for this assignment 1 in R
+getwd()
+#Setting up working directory for this assignment 1
+setwd("/Desktop/R/John Hopkins uni work/R Study/specdata")
+#Re-checking the working directory for this assignment 1 in R to make sure that the code below reads from the correct path
+getwd()
+
+#Setting up the function 'corr'
+corr <- function(directory, threshold = 0) {
+#setting the corrVector matrix variable to zero
+corrVector=NULL  
+# The following code is designed to create a data table called, 'pollutant_data' by reading through the csv files '001.csv' up to '332.csv'.
+  for (i in 1:332){
+    if(i<10){   #if the value of 'i' is between 1 and 9
+      corr_data=read.csv(paste("0","0",as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+    }
+    else if (i>=10 & i<100){ #if the value of 'i' is between 10 and 99
+      corr_data=read.csv(paste("0",as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+    }
+    else { #if the value of 'i' is between 100 and 332
+      corr_data=read.csv(paste(as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+    }
+  }
+  #The following code is used to delete the rows that contain "NA", "NaN", or " " in the dataset corr_data
+  corr_data=na.omit(corr_data)
+  # The following code is used to enter the correlation vector valuses to the corrVector matrix variable after reading the data
+  if(nrow(corr_data)>threshold){
+    corrVector =c(corrVector,cor(corr_data[,2]),corr_data[,3])
+  }
+# The following code returns the updated value(s) in corrVector
+return (corrVector)
+}
+
+# The following code returns the correlation matrix values given the input value of 150
+cr = corr("specdata",150)
+# the following code returns the heading and summary of the variable 'cr'
+head(cr); summary(cr)
+
+# The following code returns the correlation matrix values given the input value of 400
+cr = corr("specdata",400)
+# the following code returns the heading and summary of the variable 'cr'
+head(cr); summary(cr)
+
+# The following code returns the correlation matrix values given the input value of 5000
+cr=corr("specdata",5000)
+# the following code returns the heading, summary and length of the variable 'cr'
+head(cr); summary(cr);length(cr)
+
+# The following code returns the correlation matrix values given the input value
+cr=corr("specdata")
+# the following code returns the heading, summary and length of the variable 'cr'
+head(cr); summary(cr);length(cr)
+
+
