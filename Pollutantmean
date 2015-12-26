@@ -1,0 +1,54 @@
+#Assinment 1: Pollutant Data (specdata)
+#Name: Abhay Kumar Jha
+#Email:abhay_91107@yahoo.com.au"
+
+#Checking the working directory for this assignment 1 in R
+getwd()
+#Setting up working directory for this assignment 1
+setwd("/Desktop/R/John Hopkins uni work/R Study/specdata")
+#Re-checking the working directory for this assignment 1 in R to make sure that the code below reads from the correct path
+getwd()
+
+#Setting up the function pollutantmean to calculate the mean of the pollutants.
+pollutantmean <- function(directory,pollutant, id = 1:332) {
+  
+  #Setting the sum of all observed values of the pollutants we are analysing (Sulphate or nitrate)
+  Pollutant_Total=0
+  #Setting the number of observations (rows) to 0 (i.e. the total number of observed values of pollutant)
+  Pollutant_Observations=0
+  
+  # The following code is designed to create a data table called, 'pollutant_data' by reading through the csv files '001.csv' up to '332.csv'.
+  for (i in id){   #for a given value of the variable 'i' from 1 to 332 mentioned as id in this function, the folowing nested if statements are used to create the dataset 'pollutant_data'
+    if(i<10){   #if the value of 'i' is between 1 and 9
+    pollutant_data=read.csv(paste("0","0",as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+    }
+    else if (i>=10 & i<100){ #if the value of 'i' is between 10 and 99
+    pollutant_data=read.csv(paste("0",as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+    }
+    else { #if the value of 'i' is between 100 and 332
+    pollutant_data=read.csv(paste(as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+    }
+  #The following code is used to delete the rows that contain "NA", "NaN", or " " in the dataset pollutant_data
+  pollutant_data=na.omit(pollutant_data)
+  #The following code increments the value of the variable, 'Pollutant_Observations' with the current number of rows in the dataset 'pollutant_data'.  
+  Pollutant_Observations=Pollutant_Observations + nrow(pollutant_data)
+  
+  #The following code increments the value of the variable, 'Pollutant_Total' with the sum of the values in the pollutant_data variable 'sulfate'. 
+  if (pollutant=="sulphate"){Pollutant_Total=Pollutant_Total + sum(pollutant_data$sulfate)}
+  #The following code increments the value of the variable, 'Pollutant_Total' with the sum of the values in the pollutant_data variable 'nitrate'.
+  else if (pollutant=="nitrate"){Pollutant_Total=Pollutant_Total + sum(pollutant_data$nitrate)}
+  
+  }
+  #The following code returns the mean or average of a given pollutant (i.e. "sulfate" or "nitrate" for a given id frame (i.e. from 1 to 332))
+  return (Pollutant_Total/Pollutant_Observations)
+  
+}# end of function creation
+
+# Calculating the pollutant mean for the pollutant "Sulfate" when the values for id in the function pollutantmean range from 1 to 10.
+pollutantmean("specdata","sulfate",1:10)
+
+# Calculating the pollutant mean for the pollutant "Sulfate" when the values for id in the function pollutantmean range from 70 to 72.
+pollutantmean("specdata","nitrate",70:72)
+
+# Calculating the pollutant mean for the pollutant "nitrate" when the values for id in the function pollutantmean is 23.
+pollutantmean("specdata","nitrate",23)
