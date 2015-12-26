@@ -1,0 +1,50 @@
+#Assinment 1: Pollutant Data (specdata)
+#Name: Abhay Kumar Jha
+#Email:abhay_91107@yahoo.com.au"
+
+#Checking the working directory for this assignment 1 in R
+getwd()
+#Setting up working directory for this assignment 1
+setwd("/Desktop/R/John Hopkins uni work/R Study/specdata")
+#Re-checking the working directory for this assignment 1 in R to make sure that the code below reads from the correct path
+getwd()
+
+#Setting up the function 'Complete'
+complete <- function(directory, id = 1:332) {
+  complete_dataframe=NULL
+    # The following code is designed to create a data table called, 'pollutant_data' by reading through the csv files '001.csv' up to '332.csv'.
+    for (i in id){   #for a given value of the variable 'i' from 1 to 332 mentioned as id in this function, the folowing nested if statements are used to create the dataset 'pollutant_data'
+      if(i<10){   #if the value of 'i' is between 1 and 9
+        complete_data=read.csv(paste("0","0",as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+      }
+      else if (i>=10 & i<100){ #if the value of 'i' is between 10 and 99
+        complete_data=read.csv(paste("0",as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+      }
+      else { #if the value of 'i' is between 100 and 332
+        complete_data=read.csv(paste(as.character(i),".csv", sep=""),header=TRUE,na.strings=c("NA","NaN", " "))
+      }
+      #The following code is used to delete the rows that contain "NA", "NaN", or " " in the dataset complete_data
+      complete_data=na.omit(complete_data)
+      #The following code is used to assign and complete the matrix complete_data
+      complete_data=as.matrix(complete_data)
+      complete_dataframe=rbind(complete_dataframe,c(i,nrow(complete_data)))
+    }
+  #The following code is used to set the values in the variable complete_dataframe.
+  complete_dataframe=data.frame(complete_dataframe)
+  #The following code is used to assign names to the variables
+  names(complete_dataframe)=c('id','nobs')
+  #The following code is used to return the values in the variable complete_dataframe.
+  return(complete_dataframe)
+}
+
+#The following code calculates the value of the output when the input value is 1
+complete("specdata",1)
+
+#The following code calculates the value of the output when the input values are 2,4,8,10,12
+complete("specdata",c(2,4,8,10,12))
+
+#The following code calculates the value of the output when the input values are in the range of 25 to 30
+complete("specdata", 30:25)
+
+#The following code calculates the value of the output when the input value is 1
+complete("specdata",3)
