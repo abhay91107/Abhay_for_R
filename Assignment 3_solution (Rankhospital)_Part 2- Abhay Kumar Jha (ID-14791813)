@@ -1,0 +1,71 @@
+#Assinment 3: Hospital Data
+#Name: Abhay Kumar Jha
+#Email:abhay_91107@yahoo.com.au
+#user ID: 14791813
+
+#Part 3: Ranking hospitals by outcome in a state
+
+# creating a ranking function called rankhospital
+
+rankhospital=function(state,outcome,num="best"){
+  ## Read outcome data
+  data = read.csv("outcome-of-care-measures.csv")
+  
+  ## Check that state and outcome are valid
+  states = levels(data[, 7])[data[, 7]]
+  state_flag = FALSE
+  for (i in 1:length(states)) {
+    if (state == states[i]) {
+      state_flag = TRUE
+    }
+  }
+  if (!state_flag) {
+    stop ("invalid state")
+  } 
+  if (!((outcome == "heart attack") | (outcome == "heart failure")
+        | (outcome == "pneumonia"))) {
+    stop ("invalid outcome")
+  }
+  
+  ## Return hospital name in that state with the given rank 30 day death rate
+  col = if (outcome == "heart attack") {
+    11
+  } else if (outcome == "heart failure") {
+    17
+  } else {
+    23
+  }
+  #Setting the variables to the corresponding fields in the dataset
+  data[, col] = suppressWarnings(as.numeric(levels(data[, col])[data[, col]]))
+  data[, 2] = as.character(data[, 2])
+  statedata = data[grep(state, data$State), ]
+  orderdata = statedata[order(statedata[, col], statedata[, 2], na.last = NA), ]
+  if(num == "best") {
+    orderdata[1, 2]
+  } else if(num == "worst") {
+    orderdata[nrow(orderdata), 2]
+  } else{
+    orderdata[num, 2]
+  }
+}
+
+# Reading from Source file "rankhospital.R"
+# source("rankhospital.R")
+
+# Output to rank the top 5 hospitals in Maryland that specialise in Heart Failure
+rankhospital("MD","heart failure",5)
+
+#Reading the titles of all the variables in the dataset related to texas.
+# head(texas)
+
+# Output to rank the top 4 hospitals in Texas that specialise in Heart Failure
+rankhospital("TX","heart failure",4)
+
+# Output to rank the worst heart attack hospitals in Texas
+rankhospital("MD","heart attack","worst")
+
+# Output to rank 5000 hospitals in Minesotta that deal with Heart Attack cases
+rankhospital("MN","heart attack",5000)
+
+#Submitting the code for assessment
+submit()
